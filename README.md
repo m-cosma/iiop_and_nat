@@ -4,6 +4,7 @@
 
 # Commands
 
+```
 docker build -f Dockerfile.server -t iiop-and-nat-server-v1 .
 docker build -f Dockerfile.client -t iiop-and-nat-client-v1 .
 docker build -f Dockerfile.nat -t my-ubuntu-nettools .
@@ -49,3 +50,4 @@ winpty docker exec -it corba_nat bash
 
 docker network inspect net_onprem
 docker network inspect net_azure
+```
