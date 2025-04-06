@@ -1,0 +1,23 @@
+interface ppb
+{
+  exception MethodFailure
+  {
+    short error_code;
+    string description;
+  };
+
+  void GetMsisdn(in long ms_id, out string msisdn) raises (MethodFailure);
+};
+
+
+interface ppbAuth
+{
+  exception NoLogin {
+    string description;
+  };
+
+  ppb LogIn(in string user, in string password) raises (NoLogin);
+  void LogOut(in ppb session) raises (NoLogin);
+
+  string GetVersion();
+};

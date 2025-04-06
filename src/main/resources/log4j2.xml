@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+    <Properties>
+        <Property name="log_dir" value="${sys:LOG_BASE:-log}"/>
+        <Property name="base_filename" value="iiop-nat"/>
+        <Property name="log_extension">log</Property>
+        <Property name="LOG_PATTERN">%d{yyyyMMdd HH:mm:ss.SSS} %5p --- %-30.30c{1.} : %m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Console>
+
+        <RollingRandomAccessFile name="LogFile"
+                                 fileName="${log_dir}/${base_filename}.${log_extension}"
+                                 immediateFlush="false"
+                                 filePattern="${log_dir}/${base_filename}-%d{yyyyMMdd}-%i.${log_extension}">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <CronTriggeringPolicy schedule="0 0 0 * * ? *"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy min="1" max="9"/>
+        </RollingRandomAccessFile>
+
+        <Async name="AsyncLogFile">
+            <AppenderRef ref="LogFile"/>
+        </Async>
+
+    </Appenders>
+
+    <Loggers>
+        <!-- LOG everything at INFO level -->
+        <Root level="info">
+            <AppenderRef ref="AsyncLogFile" />
+        </Root>
+
+        <Logger name="org.jacorb" level="warn" additivity="false">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+
+        <Logger name="com.rsi.example" level="info" additivity="false">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+
+    </Loggers>
+
+</Configuration>

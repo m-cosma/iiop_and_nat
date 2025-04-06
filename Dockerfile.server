@@ -1,0 +1,30 @@
+FROM eclipse-temurin:21-jdk-jammy
+
+
+RUN apt update && apt install -y \
+    apt-utils \
+    iptables \
+    iproute2 \
+    tcpdump \
+    traceroute \
+    iputils-ping \
+    net-tools \
+    vim \
+    && apt clean && rm -rf /var/lib/apt/lists/*
+
+
+ENV SERVER_PORT=17702
+ENV IOR_PROXY_HOST=
+
+# Optional: Set working directory
+WORKDIR /app
+
+# Copy your Java app (assuming a JAR file)
+COPY ./target/iiop-and-nat-1.0.jar .
+COPY ./target/lib/ ./lib/
+COPY ./src/main/resources/log4j2.xml .
+COPY ./src/main/resources/start_server.sh .
+
+
+# Keep the container running by tailing /dev/null
+CMD ["tail", "-f", "/dev/null"]

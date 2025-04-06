@@ -1,0 +1,32 @@
+FROM eclipse-temurin:21-jdk-jammy
+
+
+RUN apt update && apt install -y \
+    apt-utils \
+    iptables \
+    iproute2 \
+    tcpdump \
+    traceroute \
+    iputils-ping \
+    net-tools \
+    vim \
+    && apt clean && rm -rf /var/lib/apt/lists/*
+
+
+ENV SERVER_IP=192.168.100.104
+ENV SERVER_PORT=17702
+ENV GATEWAY_IP=172.20.0.5
+
+
+# Optional: Set working directory
+WORKDIR /app
+
+# Copy your Java app (assuming a JAR file)
+COPY ./target/iiop-and-nat-1.0.jar .
+COPY ./target/lib/ ./lib/
+COPY ./src/main/resources/log4j2.xml .
+COPY ./src/main/resources/network_setup_client.sh .
+COPY ./src/main/resources/start_client.sh .
+
+# Keep the container running by tailing /dev/null
+CMD ["tail", "-f", "/dev/null"]
